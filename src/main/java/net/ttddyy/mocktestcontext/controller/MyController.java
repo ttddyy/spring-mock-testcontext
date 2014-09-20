@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MyController {
 
-	// TODO: autowire, name specified bean
 	@Autowired
 	FooService fooService;
 

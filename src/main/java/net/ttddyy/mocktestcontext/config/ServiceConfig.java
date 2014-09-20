@@ -20,12 +20,12 @@ public class ServiceConfig {
 		return new FooServiceImpl();
 	}
 
-	@Bean
+	@Bean(name = "barA")
 	public BarService barServiceA() {
 		return new BarServiceImpl("barA");
 	}
 
-	@Bean
+	@Bean(name = "barB")
 	public BarService barServiceB() {
 		return new BarServiceImpl("barB");
 	}
