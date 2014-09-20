@@ -1,5 +1,6 @@
 package net.ttddyy.mocktestcontext;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
@@ -9,28 +10,17 @@ import org.springframework.web.context.support.GenericWebApplicationContext;
 
 /**
  * @author Tadaya Tsuyukubo
- *
- * TODO: make this TestContextBootstrapper
  */
+// TODO: make this TestContextBootstrapper
 public class MockAnnotationConfigWebContextLoader extends AnnotationConfigWebContextLoader {
 
 	@Override
 	protected void customizeContext(GenericWebApplicationContext context, WebMergedContextConfiguration webMergedConfig) {
 
-//		MockBeanFactory mockBeanFactory = new MockBeanFactory(context.getBeanFactory());
-//		GenericApplicationContext mockContext = new GenericApplicationContext(mockBeanFactory);
-//		mockContext.refresh();
-
-		// create mock-context
+		// create mock-context and set it to the top of appContext and beanFactory
 		MockBeanFactory mockBeanFactory = new MockBeanFactory(context.getBeanFactory());
-		GenericApplicationContext mockContext = new GenericApplicationContext(mockBeanFactory);
-		mockContext.refresh();
-
-		ApplicationContext rootContext = context;
-		while (rootContext.getParent() != null) {
-			rootContext = rootContext.getParent();
-		}
-		((ConfigurableApplicationContext) rootContext).setParent(mockContext);
+		ConfigurableBeanFactory rootBeanFactory = ApplicationContextUtils.getRootBeanFactory(context);
+		rootBeanFactory.setParentBeanFactory(mockBeanFactory);
 
 	}
 

@@ -5,30 +5,26 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.AutowireCandidateResolver;
-import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.Lifecycle;
-import org.springframework.context.weaving.LoadTimeWeaverAware;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.util.*;
-import org.springframework.web.servlet.handler.MappedInterceptor;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.mockito.Mockito.mock;
 
 /**
  * @author Tadaya Tsuyukubo
- *
- *
- * TODO: expose mocking info to beanFactory, so that user can inject those info
  */
+// TODO: expose mocking info to beanFactory, so that user can inject those info
 public class MockBeanFactory extends DefaultListableBeanFactory {
 
 	private ListableBeanFactory originalBeanFactory;
@@ -49,25 +45,7 @@ public class MockBeanFactory extends DefaultListableBeanFactory {
 		// when original context contains the bean, such as test target
 		String[] result = originalBeanFactory.getBeanNamesForType(type);
 		if (result.length > 0) {
-			return new String[]{};  // original context already contains target. so return empty for this mock context
-		}
-
-		// need to exclude these calls from creation of GenericApplicationContext
-		// TODO: think about this
-		if (type.isAssignableFrom(BeanDefinitionRegistryPostProcessor.class) ||
-				type.isAssignableFrom(BeanFactoryPostProcessor.class) ||
-				type.isAssignableFrom(BeanPostProcessor.class) ||
-				type.isAssignableFrom(ApplicationListener.class) ||
-				type.isAssignableFrom(LoadTimeWeaverAware.class) ||
-				type.isAssignableFrom(Lifecycle.class)) {
-			return result;
-		}
-
-		// for web context (GenericWebApplicationContext)
-		// need to exclude calls from spring-mvc framework triggered by BeanFactoryUtils.beanNamesForTypeIncludingAncestors()
-		// TODO: think about this
-		if (type.isAssignableFrom(MappedInterceptor.class)) {
-			return result;
+			return new String[]{};  // original beanFactory already contains target. so return empty for this mock beanFactory
 		}
 
 		String name = "mock-" + counter++;  // create unique name
@@ -77,7 +55,7 @@ public class MockBeanFactory extends DefaultListableBeanFactory {
 	}
 
 
-	// child context's findAutowireCandidates() calls this method in doResolveDependency()
+	// child beanFactory's findAutowireCandidates() calls this method in doResolveDependency()
 	@Override
 	protected boolean isAutowireCandidate(String beanName, DependencyDescriptor descriptor, AutowireCandidateResolver resolver) throws NoSuchBeanDefinitionException {
 
@@ -102,7 +80,7 @@ public class MockBeanFactory extends DefaultListableBeanFactory {
 		qualifierTypes.add(Qualifier.class);
 		try {
 			qualifierTypes.add((Class<? extends Annotation>)
-					ClassUtils.forName("javax.inject.Qualifier", MockBeanFactoryInitialImpl.class.getClassLoader()));
+					ClassUtils.forName("javax.inject.Qualifier", MockBeanFactory.class.getClassLoader()));
 		} catch (ClassNotFoundException ex) {
 			// JSR-330 API not available - simply skip.
 		}
