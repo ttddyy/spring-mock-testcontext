@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Manager to keep MockInfo
+ *
  * @author Tadaya Tsuyukubo
  */
-public class MockManager {
+public class MockInfoManager {
 
 	private Set<MockInfo> mockInfoSet = new HashSet<MockInfo>();
 
@@ -22,8 +24,8 @@ public class MockManager {
 
 	public MockInfo getByBeanName(String beanName) {
 		Assert.notNull(beanName);
-		// beanName is unique
 
+		// beanName is unique
 		for (MockInfo mockInfo : mockInfoSet) {
 			if (beanName.equals(mockInfo.getBeanName())) {
 				return mockInfo;
@@ -63,18 +65,6 @@ public class MockManager {
 			}
 		}
 		return null;
-	}
-
-	public List<MockInfo> getByQualifierName(String qualifierName) {
-		Assert.notNull(qualifierName);
-
-		List<MockInfo> result = new ArrayList<MockInfo>();
-		for (MockInfo mockInfo : mockInfoSet) {
-			if (qualifierName.equals(mockInfo.getQualifierName())) {
-				result.add(mockInfo);
-			}
-		}
-		return result;
 	}
 
 	public boolean remove(MockInfo mockInfo) {

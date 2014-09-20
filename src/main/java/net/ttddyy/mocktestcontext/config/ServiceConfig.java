@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * Service layer bean configuration.
+ *
  * @author Tadaya Tsuyukubo
  */
 @Configuration

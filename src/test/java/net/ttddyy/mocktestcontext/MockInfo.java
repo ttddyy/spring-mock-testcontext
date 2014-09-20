@@ -1,6 +1,8 @@
 package net.ttddyy.mocktestcontext;
 
 /**
+ * Keep mock bean info.
+ *
  * @author Tadaya Tsuyukubo
  */
 public class MockInfo {
@@ -17,16 +19,8 @@ public class MockInfo {
 		return beanName;
 	}
 
-	public void setBeanName(String beanName) {
-		this.beanName = beanName;
-	}
-
 	public Class<?> getType() {
 		return type;
-	}
-
-	public void setType(Class<?> type) {
-		this.type = type;
 	}
 
 	public String getQualifierName() {

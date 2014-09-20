@@ -9,6 +9,9 @@ import org.springframework.context.ConfigurableApplicationContext;
  */
 public class ApplicationContextUtils {
 
+	/**
+	 * Retrieve root ApplicationContext's root BeanFactory
+	 */
 	public static ConfigurableBeanFactory getRootBeanFactory(ApplicationContext applicationContext) {
 
 		// first, get root application context

@@ -22,6 +22,8 @@ import java.util.Set;
 import static org.mockito.Mockito.mock;
 
 /**
+ * BeanFactory to manage mock beans.
+ *
  * @author Tadaya Tsuyukubo
  */
 // TODO: expose mocking info to beanFactory, so that user can inject those info
@@ -29,7 +31,7 @@ public class MockBeanFactory extends DefaultListableBeanFactory {
 
 	private ListableBeanFactory originalBeanFactory;
 
-	private MockManager mockManager = new MockManager();
+	private MockInfoManager mockInfoManager = new MockInfoManager();
 
 	private int counter = 0;  // used for generating unique name
 
@@ -49,7 +51,7 @@ public class MockBeanFactory extends DefaultListableBeanFactory {
 		}
 
 		String name = "mock-" + counter++;  // create unique name
-		mockManager.createMockInfo(name, type);
+		mockInfoManager.createMockInfo(name, type);
 
 		return new String[]{name};  // always return single new unique name for mock candidates
 	}
@@ -59,7 +61,7 @@ public class MockBeanFactory extends DefaultListableBeanFactory {
 	@Override
 	protected boolean isAutowireCandidate(String beanName, DependencyDescriptor descriptor, AutowireCandidateResolver resolver) throws NoSuchBeanDefinitionException {
 
-		MockInfo mockInfo = mockManager.getByBeanName(beanName);
+		MockInfo mockInfo = mockInfoManager.getByBeanName(beanName);
 		if (mockInfo == null) {
 			return false;  // not scope of this context. may be resolved in child context
 		}
@@ -132,7 +134,7 @@ public class MockBeanFactory extends DefaultListableBeanFactory {
 	@Override
 	protected <T> T doGetBean(String name, Class<T> requiredType, Object[] args, boolean typeCheckOnly) throws BeansException {
 
-		MockInfo mockInfo = mockManager.getByBeanName(name);
+		MockInfo mockInfo = mockInfoManager.getByBeanName(name);
 		if (mockInfo == null) {  // in case for non-mock object
 			return super.doGetBean(name, requiredType, args, typeCheckOnly);
 		}
@@ -148,11 +150,11 @@ public class MockBeanFactory extends DefaultListableBeanFactory {
 			if (StringUtils.isEmpty(qualifierName)) {
 				// when qualifier doesn't exist but that bean has already mapped to the same type, then return already mapped bean
 
-				List<MockInfo> candidates = mockManager.getByTypeExceptMe(mockInfo);
+				List<MockInfo> candidates = mockInfoManager.getByTypeExceptMe(mockInfo);
 				if (!CollectionUtils.isEmpty(candidates)) {
 					for (MockInfo candidate : candidates) {
 						if (StringUtils.isEmpty(candidate.getQualifierName())) {
-							mockManager.remove(mockInfo);  // existing match found, remove current entry
+							mockInfoManager.remove(mockInfo);  // existing match found, remove current entry
 							// same type but has no qualifier. return that bean
 							// TODO: current impl only grows alias because it always has new beanname.
 							T bean = super.doGetBean(candidate.getBeanName(), null, null, false);
@@ -163,9 +165,9 @@ public class MockBeanFactory extends DefaultListableBeanFactory {
 				}
 			} else {
 				// qualifier exists, and same type(class) and same qualifier name has already mapped, then return the mapped bean
-				MockInfo typeAndQualifierMatched = mockManager.getByTypeAndQualifierNameExceptMe(mockInfo);
+				MockInfo typeAndQualifierMatched = mockInfoManager.getByTypeAndQualifierNameExceptMe(mockInfo);
 				if (typeAndQualifierMatched != null) {
-					mockManager.remove(mockInfo);  // existing match found, remove current entry
+					mockInfoManager.remove(mockInfo);  // existing match found, remove current entry
 					// return matched bean
 					// TODO: current impl only grows alias because it always has new beanname.
 					T bean = super.doGetBean(typeAndQualifierMatched.getBeanName(), null, null, false);

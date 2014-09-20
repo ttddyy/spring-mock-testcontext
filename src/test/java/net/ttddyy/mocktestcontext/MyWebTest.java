@@ -18,16 +18,15 @@ import static org.hamcrest.Matchers.sameInstance;
 import static org.mockito.BDDMockito.given;
 
 /**
+ * Unittest for controller with web env.
+ *
  * @author Tadaya Tsuyukubo
  */
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = {
-		WebConfig.class
-}
-		,
-		loader = MockAnnotationConfigWebContextLoader.class
+@ContextConfiguration(
+		classes = WebConfig.class,
+		loader = MockAnnotationConfigWebContextLoader.class  // TODO: make it TestContextBootstrapper
 )
 public class MyWebTest {
 

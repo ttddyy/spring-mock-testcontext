@@ -3,6 +3,8 @@ package net.ttddyy.mocktestcontext.config;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**
+ * WebApplicationInitializer for this sample app.
+ *
  * @author Tadaya Tsuyukubo
  */
 public class MyWebApplicationInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {

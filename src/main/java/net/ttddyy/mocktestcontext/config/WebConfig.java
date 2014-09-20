@@ -9,6 +9,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 /**
+ * Web layer bean configuration.
+ *
  * @author Tadaya Tsuyukubo
  */
 @Configuration

@@ -4,11 +4,12 @@ import net.ttddyy.mocktestcontext.service.BarService;
 import net.ttddyy.mocktestcontext.service.FooService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * Sample controller.
+ *
  * @author Tadaya Tsuyukubo
  */
 @RestController

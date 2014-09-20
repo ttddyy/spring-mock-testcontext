@@ -18,15 +18,14 @@ import static org.hamcrest.Matchers.sameInstance;
 import static org.mockito.BDDMockito.given;
 
 /**
- * @author Tadaya Tsuyukubo
+ * Unittest for controller. (not web env)
  *
+ * @author Tadaya Tsuyukubo
  */
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {
-		MyTest.MyTestConfig.class
-},
-		loader = MockAnnotationConfigContextLoader.class
+@ContextConfiguration(
+		classes = MyTest.MyTestConfig.class,
+		loader = MockAnnotationConfigContextLoader.class  // TODO: make it TestContextBootstrapper
 )
 public class MyTest {
 
