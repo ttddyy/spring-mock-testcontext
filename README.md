@@ -51,24 +51,23 @@ I created a MockBeanFactory which manages mocking beans, and place it to the roo
 Since spring's DI mechanism searches candidate beans from child to parent context(bean factory), when child context(TestContext) cannot resolve the bean, the MockBeanFactory at last generates a mock bean and inject to the target variable.
 
 
-## Bean resolution logic in BeanFactory
+## MockBeanFactory Actual Impl
 
-This is how BeanFactory(DefaultListableBeanFactory) finds target bean:
+In actual implementation, MockBeanFactory behaves bit different from normal BeanFactory.  
+It delays actual mock creation until bean retrieval time in order to gather all necessary information to decide whether to create a new mock or to return existing mock bean.
+
+### Bean resolution logic in BeanFactory
+
+This is how BeanFactory(`DefaultListableBeanFactory`) finds target bean:
 - the child BeanFactory looks up candidate beannames at once including ancestors(parents)
 - iterate candidate beannames to check whether each candidate qualifies for the injection target (such as qualifier name, etc)
 - retrieve actual bean
 
 
 
-## MockBeanFactory Actual Impl
-
-In actual implementation, it differs a bit from my impl concept.  
-MockBeanFactory delays actual mock creation until bean retrieval time in order to gather all necessary information to decide whether to create a new mock or to return existing mock bean.
-
-
 ## Classes
 
-*[MyController](src/main/java/net/ttddyy/mocktestcontext/controller/MyController.java), [FooService](src/main/java/net/ttddyy/mocktestcontext/service/FooService.java), [BarService](src/main/java/net/ttddyy/mocktestcontext/service/BarService.java)* : Sample controller and service
+*[MyController](src/main/java/net/ttddyy/mocktestcontext/controller/MyController.java), [FooService](src/main/java/net/ttddyy/mocktestcontext/service/FooService.java), [BarService](src/main/java/net/ttddyy/mocktestcontext/service/BarService.java)* : Sample controller and services
 
 *[MyTest](src/test/java/net/ttddyy/mocktestcontext/MyTest.java)* : Sample controller unit test (not in web environment)
 
@@ -78,7 +77,7 @@ MockBeanFactory delays actual mock creation until bean retrieval time in order t
 
 *[MockManager](src/test/java/net/ttddyy/mocktestcontext/MockInfoManager.java), [MockInfo](src/test/java/net/ttddyy/mocktestcontext/MockInfo.java)*: Manage mock information
 
-*[MockAnnotationConfigContextLoader](src/test/java/net/ttddyy/mocktestcontext/MockAnnotationConfigContextLoader.java), [MockAnnotationConfigWebContextLoader](src/test/java/net/ttddyy/mocktestcontext/MockAnnotationConfigWebContextLoader.java)*: ContextLoader for this feature. (Will be implemented as TestBootstrapper)
+*[MockFeatureApplicationContextInitializer](src/test/java/net/ttddyy/mocktestcontext/MockFeatureApplicationContextInitializer.java)* : ApplicationContextInitializer for this feature. (May be used/implemented as TestContextBootstrapper)
 
 
 
@@ -87,7 +86,7 @@ MockBeanFactory delays actual mock creation until bean retrieval time in order t
 - make pluggable strategy to create/reset/(destroy) mocks
 - improve MockBeanFactory impl
 - expose mocking info to BeanFactory, so that user can inject the info to tests
-- make feature TestBootstrapper
+- make this feature TestBootstrapper
 - automatically reset mocks in each test
 - etc.
 

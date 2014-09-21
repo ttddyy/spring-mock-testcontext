@@ -25,7 +25,7 @@ import static org.mockito.BDDMockito.given;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
 		classes = MyTest.MyTestConfig.class,
-		loader = MockAnnotationConfigContextLoader.class  // TODO: make it TestContextBootstrapper
+		initializers = MockFeatureApplicationContextInitializer.class  // TODO: make it TestContextBootstrapper
 )
 public class MyTest {
 

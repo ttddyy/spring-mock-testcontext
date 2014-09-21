@@ -26,7 +26,7 @@ import static org.mockito.BDDMockito.given;
 @WebAppConfiguration
 @ContextConfiguration(
 		classes = WebConfig.class,
-		loader = MockAnnotationConfigWebContextLoader.class  // TODO: make it TestContextBootstrapper
+		initializers = MockFeatureApplicationContextInitializer.class  // TODO: make it TestContextBootstrapper
 )
 public class MyWebTest {
 
