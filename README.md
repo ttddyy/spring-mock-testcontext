@@ -1,6 +1,6 @@
 # About
 
-This is my proof of concept project to implement `Auto Mock Feature` in Spring Test Context Framework.
+This is my **proof of concept** project to implement `Auto Mock Feature` in Spring Test Context Framework.
 
 
 # Feature Concept
@@ -9,7 +9,7 @@ This is my proof of concept project to implement `Auto Mock Feature` in Spring T
 
 While writing tests with mock-frameworks, I have to explicitly prepare mock objects: such as instantiating mocks or annotating mocked variables, as well as resetting or re-assigning mocks between tests.
 I think these code can be considered as infrastructure code for using mock-frameworks.
-The `Auto Mock Feature` is to automate those mocking infrastructure logic.  
+The `Auto Mock Feature` is to automate these mocking infrastructure logic.  
 In other word, when this feature is enabled, automatically inject mock beans if dependency injection cannot resolve the target beans from user specified application configurations.
 
 
@@ -33,6 +33,8 @@ public class MyTest {
      given(myService.getSomething).willReturn(...);   // prepare mock
 
      myController.doSomething();   // call test target method
+     
+     ... // verify logic
   }
 }
 
@@ -60,13 +62,13 @@ This is how BeanFactory(DefaultListableBeanFactory) finds target bean:
 
 ## MockBeanFactory Actual Impl
 
-In actual implementation, it differes a bit from concept.  
-MockBeanFactory delays actual mock creation until bean retrieval time, in order to gather necessry information to decide whether to create a new mock or to return existing mock.
+In actual implementation, it differs a bit from my impl concept.  
+MockBeanFactory delays actual mock creation until bean retrieval time in order to gather all necessary information to decide whether to create a new mock or to return existing mock bean.
 
 
 ## Classes
 
-*[MyController](src/main/java/net/ttddyy/mocktestcontext/MyController.java), [FooService](src/main/java/net/ttddyy/mocktestcontext/FooService.java), [BarService](src/main/java/net/ttddyy/mocktestcontext/BarService.java)* : Sample controller and service
+*[MyController](src/main/java/net/ttddyy/mocktestcontext/controller/MyController.java), [FooService](src/main/java/net/ttddyy/mocktestcontext/service/FooService.java), [BarService](src/main/java/net/ttddyy/mocktestcontext/service/BarService.java)* : Sample controller and service
 
 *[MyTest](src/test/java/net/ttddyy/mocktestcontext/MyTest.java)* : Sample controller unit test (not in web environment)
 
@@ -74,7 +76,7 @@ MockBeanFactory delays actual mock creation until bean retrieval time, in order 
 
 *[MockBeanFactory](src/test/java/net/ttddyy/mocktestcontext/MockBeanFactory.java)* : BeanFactory implementation to manage mock beans
 
-*[MockManager](src/test/java/net/ttddyy/mocktestcontext/MockManager.java), [MockInfo](src/test/java/net/ttddyy/mocktestcontext/MockInfo.java)*: Manage mock information
+*[MockManager](src/test/java/net/ttddyy/mocktestcontext/MockInfoManager.java), [MockInfo](src/test/java/net/ttddyy/mocktestcontext/MockInfo.java)*: Manage mock information
 
 *[MockAnnotationConfigContextLoader](src/test/java/net/ttddyy/mocktestcontext/MockAnnotationConfigContextLoader.java), [MockAnnotationConfigWebContextLoader](src/test/java/net/ttddyy/mocktestcontext/MockAnnotationConfigWebContextLoader.java)*: ContextLoader for this feature. (Will be implemented as TestBootstrapper)
 
